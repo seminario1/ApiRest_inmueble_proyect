@@ -1,0 +1,17 @@
+{
+  "name": "apirest_inmuebles",
+  "version": "1.0.0",
+  "description": "Apis-Rest inmuebles in docker-compose, content nodeJS and MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "GonzaloEspinozaCh",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.1.1",
+    "nodemon": "^1.17.4"
+  }
+}
