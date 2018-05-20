@@ -4,6 +4,7 @@
   "description": "Apis-Rest inmuebles in docker-compose, content nodeJS and MongoDB",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "GonzaloEspinozaCh",
