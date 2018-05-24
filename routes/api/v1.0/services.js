@@ -52,9 +52,10 @@ route.post('/registro', (req, res) =>{
     let registro = new Registro()
     registro.name =req.body.name
     registro.lastname = req.body.lastname
+    registro.phone = req.body.phone
     registro.email = req.body.email
     registro.password = req.body.password
-    registro.imguser = req.body.imguser
+    
 
     registro.save((err, usertStored) =>{
         if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
