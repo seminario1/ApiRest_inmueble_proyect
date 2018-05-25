@@ -15,8 +15,13 @@ const route = express.Router()
 route.get('/p1', (req, res) =>{
     res.send({ menssage:'mensaja de prueba'})
 })
+
+
+//listar todas las casas
 route.get('/homes', (req, res) =>{
-    res.send({ menssage:'mensaja de prueba'})
+  Homes.find({}).exec( (error, docs) => {
+    res.status(200).send(docs);
+  })
 })
 
 
@@ -68,43 +73,21 @@ route.post('/registro', (req, res) =>{
         res.status(200).send({usertStored})
     })
 })
-
+// llenar casas
 route.post('/homes', (req, res) =>{
     console.log('POST /api/homes')
     console.log(req.body)
 
     let homes = new Homes()
-          homes.codigo = req.body.codigo,
-          homes.codigoInmobiliaria=req.body.codigoInmobiliaria,
-          homes.estatus = req.body.estatus,
-          homes.tipo = req.body.tipo,
-          homes.oferta = req.body.oferta,
-          homes.estado = req.body.estado,
-          homes.region = req.body.region,
-          homes.ubicacion = req.body.ubicacion,
-          homes.zona = req.body.zona,
-          homes.direccion = req.body.direccion,
-          homes.moneda = req.body.moneda,
-          homes.precio = req.body.precio,
-          homes.descripcion = req.body.descripcion,
-          homes.fecentrega = req.body.fecentrega,
-          homes.supterreno = req.body.supterreno,
-          homes.servicios = req.body.servicios,
-          homes.amurallado = req.body.amurallado,
-          homes.desHabitacion = req.body.desHabitacion,
-          homes.desBano = req.body.desBano,
-          homes.supconstruida = req.body.supconstruida,
-          homes.numDormitorios = req.body.numDormitorios,
-          homes.dormitorios = req.body.dormitorios,
-          homes.numBanios = req.body.numBanios,
-          homes.banios = req.body.banios,
-          homes.piso = req.body.piso,
-          homes.elevador = req.body.parqueos,
-          homes.numParqueos = req.body.numParqueos,
-          homes.amoblado = req.body.amoblado,
-          homes.fecpublicacion = req.body.fecpublicacion,
-          homes.latitud = req.body.latitud,
-          homes.longitud = req.body.longitud
+          homes.tipo = req.body.tipo
+          homes.categoria = req.body.categoria
+          homes.descripcion = req.body.descripcion
+          homes.precio = req.body.precio
+          homes.superficie = req.body.superficie
+          homes.ano_de_construcion = req.body.ano_de_construcion
+          homes.cant_de_banos = req.body.cant_de_banos
+
+
 
 
     homes.save((err, casaStored) =>{
