@@ -8,7 +8,8 @@ const UserSchema = Schema({
     lastname:String,
     phone:String,
     email: String,
-    password: String
+    password: String,
+    signupDate: {type:Date, default:Date.now()}
 })
 
 

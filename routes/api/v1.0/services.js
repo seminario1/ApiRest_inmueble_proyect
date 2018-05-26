@@ -55,13 +55,25 @@ route.post('/registro', (req, res) =>{
     registro.phone = req.body.phone
     registro.email = req.body.email
     registro.password = req.body.password
-    
 
-    registro.save((err, usertStored) =>{
-        if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
-  
-        res.status(200).send({usertStored})
-    })         
+    Registro.findOne({'email':registro.email},(err,e)=>{
+        if(e){
+            console.log('email repetido')
+            res.status(404).send({message:`Este email ${registro.email} ya se encuentra registrado`})
+        }
+        else{
+            registro.save((err, usertStored) =>{
+                if(err) res.status(404).send({messaje: `Error al salvar la base de datos:${err}`})
+                console.log(err)
+          
+                res.status(200).send({usertStored})
+            })
+        }
+
+        //res.status(404).send
+    })
+
+             
 })
 
 module.exports = route
