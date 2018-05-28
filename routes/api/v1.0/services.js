@@ -65,7 +65,6 @@ route.post('/registro', (req, res) =>{
     registro.phone = req.body.phone
     registro.email = req.body.email
     registro.password = req.body.password
-<<<<<<< HEAD
 
     Registro.findOne({'email':registro.email},(err,e)=>{
         if(e){
@@ -83,10 +82,6 @@ route.post('/registro', (req, res) =>{
 
         //res.status(404).send
     })
-
-             
-=======
-
 
     registro.save((err, usertStored) =>{
         if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
@@ -108,15 +103,11 @@ route.post('/homes', (req, res) =>{
           homes.ano_de_construcion = req.body.ano_de_construcion
           homes.cant_de_banos = req.body.cant_de_banos
 
-
-
-
     homes.save((err, casaStored) =>{
         if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
 
         res.status(200).send({casaStored})
     })
->>>>>>> f486f65f04c5e9eacff3fa8e1aa459d3047e5b22
 })
 
 module.exports = route
