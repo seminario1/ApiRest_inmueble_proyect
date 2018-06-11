@@ -53,7 +53,7 @@ var storage = multer.diskStorage({
           idhome: id,
           name : req.file.originalname,
           physicalpath: req.file.path,
-          relativepath: "http://192.168.1.5:4043" + ruta
+          relativepath: "http://192.168.1.5:4030" + ruta
         };
         var imgData = new Img(img);
         imgData.save().then( (infoimg) => {
@@ -113,21 +113,22 @@ var storage = multer.diskStorage({
   var homeid;
   route.post("/home", (req, res) => {
     //Ejemplo de validacion
-    if (req.body.name == "" && req.body.email == "") {
-      res.status(400).json({
-        "msn" : "formato incorrecto"
-      });
-      return;
-    }
+  // console.log("request; ",req.body)
+    
     var home = {
+      city : req.body.city,
+      estado : req.body.estado,
+      cuartos : req.body.cuartos,
+      baños : req.body.baños,
+      superficie : req.body.superficie,
+      antiguedad : req.body.antiguedad,
       street : req.body.street,
       descripcion : req.body.descripcion,
       price : req.body.price,
       lat : req.body.lat,
       lon : req.body.lon,
       neighborhood : req.body.neighborhood,
-      city : req.body.city,
-      gallery: "",
+      gallery : "",
       contact: req.body.contact
     };
   
