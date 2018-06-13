@@ -1,4 +1,8 @@
 'use strict'
+//
+const IPWIFI = require('./database/collections/HOSTW')
+const IPMOVIL = require('./database/collections/HOSTM')
+
 const express = require('express')
 const bodyParser = require('body-parser')
 
@@ -18,7 +22,7 @@ app.use('/api/v1.0/',service)
 //app.use(service)
 
 app.listen(port, () => {
-    console.log(`Api-rest inmueble corriendo en http://localhost:${port}`)
+    console.log(`Api-rest inmueble corriendo en ${IPWIFI}:${port}`) 
 }) 
 
 module.exports = app

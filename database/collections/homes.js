@@ -18,7 +18,8 @@ var homeSchema = new Schema({
   lon : Number,
   neighborhood : String,
   gallery : Array,
-  contact : Number
+  contact : Number,
+  date: {type:Date,default:Date.now()}
 });
-var home = mongoose.model("user", homeSchema);
+var home = mongoose.model("homes", homeSchema);
 module.exports = home;

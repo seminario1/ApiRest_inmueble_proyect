@@ -3,12 +3,16 @@
 const mogoose =require('mongoose')
 const connect =  require('../../../database/collections/connect')
 const Registro = require('../../../database/collections/users')
-const Homes = require('../../../database/collections/casas')
+
 
 // hom  p
 const Home = require('../../../database/collections/homes')
 const Img = require('../../../database/collections/img')
 const express = require('express')
+
+//estas dos variables toman los valores de las IPs 
+const IPWIFI = require('../../../database/collections/HOSTW')
+const IPMOVIL = require('../../../database/collections/HOSTM')
 
 const multer = require('multer');
 const fs = require('fs')
@@ -53,7 +57,8 @@ var storage = multer.diskStorage({
           idhome: id,
           name : req.file.originalname,
           physicalpath: req.file.path,
-          relativepath: "http://192.168.1.5:4030" + ruta
+          relativepath: `${IPWIFI}:4030`
+                        //  http://192.168.1.5:4030
         };
         var imgData = new Img(img);
         imgData.save().then( (infoimg) => {
@@ -67,9 +72,11 @@ var storage = multer.diskStorage({
             var data = docs.gallery;
             var aux = new  Array();
             if (data.length == 1 && data[0] == "") {
-              home.gallery.push("http://192.168.1.5:4030/api/v1.0/homeimg/" + infoimg._id)
+              home.gallery.push(`${IPWIFI}:4030/api/v1.0/homeimg/` + infoimg._id)
+                              //  ("http://localhost:4030/api/v1.0/homeimg/" + infoimg._id)
             } else {
-              aux.push("http://192.168.1.5:4030/api/v1.0/homeimg/" + infoimg._id);
+              aux.push(`${IPWIFI}:4030/api/v1.0/homeimg/` + infoimg._id);
+                    //  ("http://localhost:4030/api/v1.0/homeimg/" + infoimg._id
               data = data.concat(aux);
               home.gallery = data;
             }
@@ -151,20 +158,24 @@ var storage = multer.diskStorage({
               info: docs
             }
           );
-        })
+        }) 
   });
   
+
+// muestra la peticin de a cauerdo a un paraetro de busqueda
+  route.get("/home2/search=:srt", (req, res, next) => {
+    console.log(req.params)
+    let search =req.params.srt
+
+    Home.find({estado:new RegExp(search, 'i')}).exec( (error, docs) => {
+      res.status(200).json(
+        {
+          info: docs
+        }
+      );
+    })
+});
 ///////////////// end homes/////////////////
-
-
-
-//listar todas las casas
-route.get('/homes', (req, res) =>{
-  Homes.find({}).exec( (error, docs) => {
-    res.status(200).send(docs);
-  })
-})
-
 
 
 
@@ -196,6 +207,7 @@ route.get('/login/:email=:password', (req, res) =>{
     })
 })
 
+//registro de usuarios  
 route.post('/registro', (req, res) =>{
     console.log('POST /api/registro')
     console.log(req.body)
@@ -223,38 +235,10 @@ route.post('/registro', (req, res) =>{
         }
 
         //res.status(404).send
-    })
-
-             
-
-
-
-    registro.save((err, usertStored) =>{
-        if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
-
-        res.status(200).send({usertStored})
-    })
+    })      
 })
-// llenar casas
-route.post('/homes', (req, res) =>{
-    console.log('POST /api/homes')
-    console.log(req.body)
-
-    let homes = new Homes()
-          homes.tipo = req.body.tipo
-          homes.categoria = req.body.categoria
-          homes.descripcion = req.body.descripcion
-          homes.precio = req.body.precio
-          homes.superficie = req.body.superficie
-          homes.ano_de_construcion = req.body.ano_de_construcion
-          homes.cant_de_banos = req.body.cant_de_banos
 
 
-    homes.save((err, casaStored) =>{
-        if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
 
-        res.status(200).send({casaStored})
-    })
-})
 
 module.exports = route
