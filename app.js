@@ -1,7 +1,6 @@
 'use strict'
 //
-const IPWIFI = require('./database/collections/HOSTW')
-const IPMOVIL = require('./database/collections/HOSTM')
+const IPWIFI = require('./database/collections/HOST')
 
 const express = require('express')
 const bodyParser = require('body-parser')

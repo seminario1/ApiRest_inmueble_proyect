@@ -5,14 +5,17 @@ const connect =  require('../../../database/collections/connect')
 const Registro = require('../../../database/collections/users')
 
 
-// hom  p
+// servicios de home
 const Home = require('../../../database/collections/homes')
 const Img = require('../../../database/collections/img')
 const express = require('express')
 
-//estas dos variables toman los valores de las IPs 
-const IPWIFI = require('../../../database/collections/HOSTW')
-const IPMOVIL = require('../../../database/collections/HOSTM')
+
+//esta variables toma el valor de la IP 
+const HOST = require('../../../database/collections/HOST')
+
+//////////////////////////////////////////////////////////
+
 
 const multer = require('multer');
 const fs = require('fs')
@@ -57,7 +60,7 @@ var storage = multer.diskStorage({
           idhome: id,
           name : req.file.originalname,
           physicalpath: req.file.path,
-          relativepath: `${IPWIFI}:4030`
+          relativepath: `${HOST}:4030`
                         //  http://192.168.1.5:4030
         };
         var imgData = new Img(img);
@@ -72,10 +75,10 @@ var storage = multer.diskStorage({
             var data = docs.gallery;
             var aux = new  Array();
             if (data.length == 1 && data[0] == "") {
-              home.gallery.push(`${IPWIFI}:4030/api/v1.0/homeimg/` + infoimg._id)
+              home.gallery.push(`${HOST}:4030/api/v1.0/homeimg/` + infoimg._id)
                               //  ("http://localhost:4030/api/v1.0/homeimg/" + infoimg._id)
             } else {
-              aux.push(`${IPWIFI}:4030/api/v1.0/homeimg/` + infoimg._id);
+              aux.push(`${HOST}:4030/api/v1.0/homeimg/` + infoimg._id);
                     //  ("http://localhost:4030/api/v1.0/homeimg/" + infoimg._id
               data = data.concat(aux);
               home.gallery = data;
@@ -227,18 +230,54 @@ route.post('/registro', (req, res) =>{
         }
         else{
             registro.save((err, usertStored) =>{
-                if(err) res.status(404).send({messaje: `Error al salvar la base de datos:${err}`})
-                console.log(err)
+                if(err) {
+                  res.status(404).send({messaje: `Error al salvar la base de datos:${err}`})
+                 console.log(err)
+                }
           
-                res.status(200).send({usertStored})
+                res.status(200).send({message:usertStored})
+              
             })
         }
-
+       
         //res.status(404).send
     })      
 })
 
+///metodo para actualizar las diresciones de la imagenes (al cambiar de red)  ///////
 
+route.get('/actualizarIP/:ip',(req,res)=>{
+  let nuevaIP = req.params.ip
+  Home.find({},(err,docs)=>{
+    
+    docs.map(home=>{
+      let id=home._id
+      let newImgGallery=[]
+      // res.send(home.gallery)
+      for(let i=0;i<home.gallery.length;i++){
+        let imgGallery= home.gallery[i]
+        let ipImg=imgGallery.split('/')
+        ipImg[2]=nuevaIP
+        let stringIP = `${ipImg[0]}//${ipImg[2]}/${ipImg[3]}/${ipImg[4]}/${ipImg[5]}/${ipImg[6]}`
+
+        newImgGallery.push(stringIP)
+ 
+      };
+      home.gallery = newImgGallery
+      Home.findOneAndUpdate({_id : id}, home, (err, params) => {
+        if(err){
+          res.send({error:'eroor en la actualizacion'})
+        }else{
+          return
+        }
+      })
+     
+    })
+  })
+
+  res.send({message: `IP's actualidas a ${nuevaIP}`})
+})
+///////////////////////////////////////////////////////////////////////////
 
 
 module.exports = route
