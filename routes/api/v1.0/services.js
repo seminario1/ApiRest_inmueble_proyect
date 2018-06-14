@@ -223,6 +223,8 @@ route.post('/registro', (req, res) =>{
     registro.password = req.body.password
 
 
+
+
     Registro.findOne({'email':registro.email},(err,e)=>{
         if(e){
             console.log('email repetido')
@@ -235,13 +237,21 @@ route.post('/registro', (req, res) =>{
                  console.log(err)
                 }
           
-                res.status(200).send({message:usertStored})
+                res.status(200).send(usertStored)
               
             })
         }
        
         //res.status(404).send
-    })      
+    
+    })
+
+    registro.save((err, usertStored) =>{
+        if(err) res.status(500).send({messaje: `Error al savar la base de datos:${err}`})
+
+        res.status(200).send({usertStored})
+    })
+
 })
 
 ///metodo para actualizar las diresciones de la imagenes (al cambiar de red)  ///////
@@ -276,8 +286,10 @@ route.get('/actualizarIP/:ip',(req,res)=>{
   })
 
   res.send({message: `IP's actualidas a ${nuevaIP}`})
+
 })
 ///////////////////////////////////////////////////////////////////////////
+
 
 
 module.exports = route
