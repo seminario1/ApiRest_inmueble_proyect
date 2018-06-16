@@ -11,7 +11,7 @@ const Img = require('../../../database/collections/img')
 const express = require('express')
 
 
-//esta variables toma el valor de la IP 
+//esta variables toma el valor de la IP
 const HOST = require('../../../database/collections/HOST')
 
 //////////////////////////////////////////////////////////
@@ -118,15 +118,15 @@ var storage = multer.diskStorage({
       res.status(200).send(img);
     });
   });
-  
+
 
   var homeid;
   route.post("/home", (req, res) => {
     //Ejemplo de validacion
   // console.log("request; ",req.body)
-    
+
     var home = {
-      city : req.body.city,
+      ciudad: req.body.ciudad,
       estado : req.body.estado,
       cuartos : req.body.cuartos,
       baños : req.body.baños,
@@ -141,19 +141,19 @@ var storage = multer.diskStorage({
       gallery : "",
       contact: req.body.contact
     };
-  
+
     var homeData = new Home(home);
-  
+
     homeData.save().then( (rr) => {
       //content-type
       homeid=rr._id;                           //variable que guarda el id de home
       res.status(200).json({
         "id" : rr._id,
-        "msn" : "usuario Registrado con exito "
+        "msn" : "Casa registrada con exito "
       });
     });
   });
-  
+
   route.get("/home", (req, res, next) => {
         Home.find({}).exec( (error, docs) => {
           res.status(200).json(
@@ -161,9 +161,9 @@ var storage = multer.diskStorage({
               info: docs
             }
           );
-        }) 
+        })
   });
-  
+
 
 // muestra la peticin de a cauerdo a un paraetro de busqueda
   route.get("/home2/search=:srt", (req, res, next) => {
@@ -210,7 +210,7 @@ route.get('/login/:email=:password', (req, res) =>{
     })
 })
 
-//registro de usuarios  
+//registro de usuarios
 route.post('/registro', (req, res) =>{
     console.log('POST /api/registro')
     console.log(req.body)
@@ -236,14 +236,14 @@ route.post('/registro', (req, res) =>{
                   res.status(404).send({messaje: `Error al salvar la base de datos:${err}`})
                  console.log(err)
                 }
-          
+
                 res.status(200).send(usertStored)
-              
+
             })
         }
-       
+
         //res.status(404).send
-    
+
     })
 
     registro.save((err, usertStored) =>{
@@ -259,7 +259,7 @@ route.post('/registro', (req, res) =>{
 route.get('/actualizarIP/:ip',(req,res)=>{
   let nuevaIP = req.params.ip
   Home.find({},(err,docs)=>{
-    
+
     docs.map(home=>{
       let id=home._id
       let newImgGallery=[]
@@ -271,7 +271,7 @@ route.get('/actualizarIP/:ip',(req,res)=>{
         let stringIP = `${ipImg[0]}//${ipImg[2]}/${ipImg[3]}/${ipImg[4]}/${ipImg[5]}/${ipImg[6]}`
 
         newImgGallery.push(stringIP)
- 
+
       };
       home.gallery = newImgGallery
       Home.findOneAndUpdate({_id : id}, home, (err, params) => {
@@ -281,7 +281,7 @@ route.get('/actualizarIP/:ip',(req,res)=>{
           return
         }
       })
-     
+
     })
   })
 
