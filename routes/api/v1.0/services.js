@@ -178,6 +178,23 @@ var storage = multer.diskStorage({
       );
     })
 });
+
+
+//home busqueda por _id de home
+route.get('/homeid/:id', (req, res) => {
+  var idh = req.params.id;
+  console.log(idh)
+  Home.findById({_id:idh}).exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        "msn": "Sucedio algun error en la busqueda"
+        
+      });
+      return;
+    }
+    res.status(200).send(docs);
+  });
+});
 ///////////////// end homes/////////////////
 
 
@@ -237,7 +254,7 @@ route.post('/registro', (req, res) =>{
                  console.log(err)
                 }
           
-                res.status(200).send(usertStored)
+                //res.status(200).send(usertStored)
               
             })
         }
@@ -254,7 +271,7 @@ route.post('/registro', (req, res) =>{
 
 })
 
-///metodo para actualizar las diresciones de la imagenes (al cambiar de red)  ///////
+///metodo para actualizar las direcciones de la imagenes (al cambiar de red)  ///////
 
 route.get('/actualizarIP/:ip',(req,res)=>{
   let nuevaIP = req.params.ip
