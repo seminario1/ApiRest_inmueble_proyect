@@ -5,7 +5,7 @@ var mon = require('mongoose');
 
 var Schema = mon.Schema;
 var homeSchema = new Schema({
-  city : String,
+  city: String,
   estado :String,
   cuartos : Number,
   baños: Number,
