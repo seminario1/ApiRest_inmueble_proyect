@@ -127,6 +127,7 @@ var storage = multer.diskStorage({
 
     var home = {
       city: req.body.city,
+      tipo: req.body.tipo,
       estado : req.body.estado,
       cuartos : req.body.cuartos,
       baños : req.body.baños,
@@ -155,13 +156,58 @@ var storage = multer.diskStorage({
   });
 
   route.get("/home", (req, res, next) => {
-        Home.find({}).exec( (error, docs) => {
-          res.status(200).json(
-            {
-              info: docs
-            }
-          );
-        })
+    var params = req.query;
+    console.log(params);
+    var tipo = params.tipo;
+    var estado = params.estado;
+    var cuartos = params.cuartos;
+    var baños = params.baños;
+    var superficie= params.superficie;
+    var antiguedad =params.antiguedad;
+    var street = params.street;
+    var price = params.price;
+    var neighborhood = params.neighborhood;
+    var over = params.over;
+    if (price == undefined && over == undefined) {
+// filtra los datos que tengan en sus atributos lat y lon null;
+Home.find({lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+res.status(200).json(
+  {
+    info: docs
+  }
+);
+})
+return;
+}
+if (over == "equals") {
+    console.log("----------------estos sons iguales-----------------")
+    Home.find({$and:[{tipo:tipo},{estado:estado},{cuartos:cuartos},{baños:baños},{superficie:superficie},{antiguedad:antiguedad},{street:street},{price:price},{neighborhood:neighborhood}]}).exec( (error, docs) => {
+      res.status(200).json(
+        {
+          info: docs
+        }
+      );
+    })
+    return;
+  }else if ( over == "true") {
+      console.log("----------------estos sons mayores igual-----------------")
+    Home.find({price: {$gte:price}}).exec( (error, docs) => {
+      res.status(200).json(
+        {
+          info: docs
+        }
+      );
+    })
+  }else if (over == "false") {
+      console.log("----------------estos son los menores/igual-----------------")
+    Home.find({price: {$lte:price}, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+      res.status(200).json(
+        {
+          info: docs
+        }
+      );
+    })
+  }
   });
 
 
@@ -188,7 +234,7 @@ route.get('/homeid/:id', (req, res) => {
     if (err) {
       res.status(500).json({
         "msn": "Sucedio algun error en la busqueda"
-        
+
       });
       return;
     }
