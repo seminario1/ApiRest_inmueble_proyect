@@ -171,7 +171,7 @@ var storage = multer.diskStorage({
     var over = params.over;
     if (price == undefined && over == undefined) {
 // filtra los datos que tengan en sus atributos lat y lon null;
-Home.find({lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+Home.find({}).exec( (error, docs) => {
 res.status(200).json(
   {
     info: docs
