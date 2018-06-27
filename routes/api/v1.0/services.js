@@ -179,6 +179,21 @@ var storage = multer.diskStorage({
     })
 });
 
+// mostrar vecindarios////////////////////////////////
+route.get("/neighborhood/search=:srt", (req, res, next) => {
+  console.log(req.params)
+  let search =req.params.srt
+
+  Home.find({neighborhood:new RegExp(search, 'i')}).exec( (error, docs) => {
+    res.status(200).json(
+      {
+        info: docs
+      }
+    );
+  })
+});
+
+
 
 //home busqueda por _id de home
 route.get('/homeid/:id', (req, res) => {
