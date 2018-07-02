@@ -352,6 +352,28 @@ route.get('/actualizarIP/:ip',(req,res)=>{
 })
 ///////////////////////////////////////////////////////////////////////////
 
+// mostrar vecindarios////////////////////////////////
+route.get("/neighborhood", (req, res, next) => {
+
+  Home.find({}).exec((err, datos) =>{
+
+    var vecindario
+
+    vecindario = datos.map(data=>(
+       {
+        _id:data._id,
+        neighborhood: data.neighborhood,
+        lat: data.lat
+      }
+    ))
+    //console.log(vecindario);
+
+    console.log(datos)
+    console.log(err);
+
+      res.status(200).json(vecindario)
+  })
+})
 
 
 module.exports = route
