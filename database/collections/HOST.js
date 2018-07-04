@@ -1,6 +1,6 @@
 'use strict'
 
-const hostmovil="http://192.168.1.5";
+const hostmovil="http://192.168.1.2";
 
 // host-home "http://192.168.1.5"
 //movil       "http://192.168.43.174";
