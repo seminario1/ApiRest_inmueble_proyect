@@ -123,7 +123,7 @@ var storage = multer.diskStorage({
   var homeid;
   route.post("/home", (req, res) => {
     //Ejemplo de validacion
-  // console.log("request; ",req.body)
+  console.log("request; ",req.body)
 
     var home = {
       city: req.body.city,
@@ -171,7 +171,7 @@ var storage = multer.diskStorage({
     var over = params.over;
     if (price == undefined && over == undefined) {
 // filtra los datos que tengan en sus atributos lat y lon null;
-Home.find({}).exec( (error, docs) => {
+Home.find({lat:{$ne:null},lon:{$ne:null}}).exec( (error, docs) => {
 res.status(200).json(
   {
     info: docs
@@ -229,8 +229,6 @@ if (over == "equals") {
 
 
 
-
-
 //home busqueda por _id homee//////
 route.get('/homeid/:id', (req, res) => {
   var idh = req.params.id;
@@ -277,7 +275,26 @@ route.get('/login/:email=:password', (req, res) =>{
         res.status(200).send({'email':user})
     })
 })
-
+route.patch(/home\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  var keys = Object.keys(req.body);
+  var home = {};
+  for (var i = 0; i < keys.length; i++) {
+    home[keys[i]] = req.body[keys[i]];
+  }
+  console.log(home);
+  Home.findOneAndUpdate({_id: id}, home, (err, params) => {
+      if(err) {
+        res.status(500).json({
+          "msn": "Error no se pudo actualizar los datos"
+        });
+        return;
+      }
+      res.status(200).json(params);
+      return;
+  });
+});
 //registro de usuarios
 route.post('/registro', (req, res) =>{
     console.log('POST /api/registro')
@@ -356,6 +373,43 @@ route.get('/actualizarIP/:ip',(req,res)=>{
 })
 ///////////////////////////////////////////////////////////////////////////
 
+// mostra todos vecindarios////////////////////////////////
+route.get("/neighborhood", (req, res, next) => {
+
+  Home.find({}).exec((err, datos) =>{
+
+    var vecindario
+
+    vecindario = datos.map(data=>(
+       {
+        _id:data._id,
+        neighborhood: data.neighborhood,
+        //lat: data.lat
+      }
+    ))
+    //console.log(vecindario);
+
+    console.log(datos)
+    console.log(err);
+
+      res.status(200).json(vecindario)
+  })
+})
+
+
+// Muestra los vecindarios en funcion de una parala de busqueda
+route.get("/neighborhood/search=:srt", (req, res, next) => {
+  console.log(req.params)
+  let search =req.params.srt
+
+  Home.find({neighborhood:new RegExp(search, 'i')}).exec( (error, docs) => {
+    res.status(200).json(
+      {
+        info: docs
+      }
+    );
+  })
+});
 
 
 module.exports = route
